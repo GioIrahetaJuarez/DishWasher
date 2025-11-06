@@ -3,7 +3,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;              // added for IEnumerator
 using System.Collections.Generic;
-using System.Linq;
+using System.Linq;using Random = UnityEngine.Random;
+
 
  public class DishController : MonoBehaviour
  {
@@ -15,7 +16,7 @@ using System.Linq;
      // optional scale/rotation applied to spawned sponge
      public Vector3 spongeLocalScale = Vector3.one;
     public float spongeRotationZ = 0f;
-    public AudioClip scrubSound;
+    public AudioClip[] scrubSound;
     // track active sponge instances so we can wait for them before completing the dish
     private List<GameObject> activeSponges = new List<GameObject>();
     // exit animation: how far down to move, and how long the shrink+move takes
@@ -163,9 +164,11 @@ using System.Linq;
          // Only process a single correct advance per call; guards above help avoid premature completion.
          if (sequence[currentIndex] == code)
         {
-            if (audioSource != null && scrubSound != null)
+            if (audioSource != null && scrubSound != null && scrubSound.Length > 0)
             {
-                audioSource.PlayOneShot(scrubSound);
+                int randomIndex = Random.Range(0, scrubSound.Length);
+                AudioClip clipToPlay = scrubSound[randomIndex];
+                audioSource.PlayOneShot(clipToPlay);
             }
              MarkIconComplete(currentIndex);
              float shakeDur = 0.18f;

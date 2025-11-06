@@ -232,7 +232,12 @@ MonoBehaviour:
   spongeTravel: 1.2
   spongeLocalScale: {x: 2, y: 2, z: 2}
   spongeRotationZ: 0
-  scrubSound: {fileID: 8300000, guid: 024875d56f467d243a294fd0ca6f5cac, type: 3}
+  scrubSound:
+  - {fileID: 8300000, guid: 024875d56f467d243a294fd0ca6f5cac, type: 3}
+  - {fileID: 8300000, guid: 1f08f6da1bb9df14ba9e31cdc8f17a84, type: 3}
+  - {fileID: 8300000, guid: 940a1f6e3abfbf448b8650dd89d0a665, type: 3}
+  - {fileID: 8300000, guid: 89516085b866d7d4e836daa9d22065a0, type: 3}
+  - {fileID: 8300000, guid: fda257763a41f444f92660b1af147b38, type: 3}
   exitMoveDistance: 5
   exitDuration: 0.5
 --- !u!82 &3177617842775614632

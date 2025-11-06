@@ -774,6 +774,18 @@ PrefabInstance:
       propertyPath: scrubSound
       value: 
       objectReference: {fileID: 8300000, guid: 024875d56f467d243a294fd0ca6f5cac, type: 3}
+    - target: {fileID: 1312471925680319462, guid: 01f84fe585665524c80a1057047ebb46, type: 3}
+      propertyPath: 'scrubSound.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 024875d56f467d243a294fd0ca6f5cac, type: 3}
+    - target: {fileID: 1312471925680319462, guid: 01f84fe585665524c80a1057047ebb46, type: 3}
+      propertyPath: 'scrubSound.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 940a1f6e3abfbf448b8650dd89d0a665, type: 3}
+    - target: {fileID: 1312471925680319462, guid: 01f84fe585665524c80a1057047ebb46, type: 3}
+      propertyPath: 'scrubSound.Array.data[2]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 1f08f6da1bb9df14ba9e31cdc8f17a84, type: 3}
     - target: {fileID: 5725310511754184734, guid: 01f84fe585665524c80a1057047ebb46, type: 3}
       propertyPath: m_PlayOnAwake
       value: 0
