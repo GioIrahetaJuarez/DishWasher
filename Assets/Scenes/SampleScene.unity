@@ -467,7 +467,7 @@ MonoBehaviour:
   difficultyAnchorMin: {x: 0.01, y: 0.81}
   difficultyAnchorMax: {x: 0.25, y: 0.86}
   difficultyAlignment: 4097
-  difficultySpawnOffset: {x: 0, y: 0}
+  difficultySpawnOffset: {x: 0, y: 2}
   gameOverWashedAnchorMin: {x: 0.1, y: 0.28}
   gameOverWashedAnchorMax: {x: 0.9, y: 0.36}
   brokenDishSound: {fileID: 8300000, guid: d13373636a8906d4ab864a59b4e0f742, type: 3}
