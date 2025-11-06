@@ -49,6 +49,7 @@ using System.Linq;
      private bool hasArrived = false;
     // shake feedback
     private Coroutine shakeCoroutine;
+    private Vector3 shakeOriginalLocal;
  
      // notify manager when done / arrived
      public Action<DishController> onCompleted;
@@ -385,15 +386,15 @@ using System.Linq;
         {
             StopCoroutine(shakeCoroutine);
             shakeCoroutine = null;
-            // ensure we restore local position in case previous coroutine left it altered
-            transform.localPosition = Vector3.zero;
         }
+        // record current local position so we restore it after shaking
+        shakeOriginalLocal = transform.localPosition;
         shakeCoroutine = StartCoroutine(ShakeRoutine(duration, magnitude));
     }
 
     IEnumerator ShakeRoutine(float duration, float magnitude)
     {
-        Vector3 originalLocal = transform.localPosition;
+        Vector3 originalLocal = shakeOriginalLocal;
         float elapsed = 0f;
         while (elapsed < duration)
         {
