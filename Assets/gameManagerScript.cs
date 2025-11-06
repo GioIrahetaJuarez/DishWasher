@@ -59,6 +59,7 @@ public class gameManagerScript : MonoBehaviour
     [Header("Game Over UI")]
     public Vector2 gameOverWashedAnchorMin = new Vector2(0.1f, 0.28f);
     public Vector2 gameOverWashedAnchorMax = new Vector2(0.9f, 0.36f);
+    public AudioClip brokenDishSound;
 
     [HideInInspector]
     public int washedCount = 0;
@@ -67,10 +68,12 @@ public class gameManagerScript : MonoBehaviour
     private List<DishController> dishStack = new List<DishController>();
     private int dishesSpawned = 0; // total dishes spawned so far (used for arrow increment logic)
     private bool isGameOver = false;
+    private AudioSource audioSource;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         spawnTimer = spawnInterval;
         // remember the original spawn interval so we can reset to it later
         baseSpawnInterval = spawnInterval;
@@ -224,6 +227,10 @@ public class gameManagerScript : MonoBehaviour
 
     void HandleGameOver()
     {
+        if (audioSource != null && brokenDishSound != null)
+        {
+            audioSource.PlayOneShot(brokenDishSound);
+        }
         isGameOver = true;
         Debug.Log("Game Over: too many dishes!");
 

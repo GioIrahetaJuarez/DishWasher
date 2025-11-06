@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 using System.Collections;              // added for IEnumerator
 using System.Collections.Generic;
 using System.Linq;
-  
+
  public class DishController : MonoBehaviour
  {
      public float moveSpeed = 4f;
@@ -14,12 +14,15 @@ using System.Linq;
      public float spongeTravel = 0.6f;
      // optional scale/rotation applied to spawned sponge
      public Vector3 spongeLocalScale = Vector3.one;
-     public float spongeRotationZ = 0f;
+    public float spongeRotationZ = 0f;
+    public AudioClip scrubSound;
     // track active sponge instances so we can wait for them before completing the dish
     private List<GameObject> activeSponges = new List<GameObject>();
     // exit animation: how far down to move, and how long the shrink+move takes
     public float exitMoveDistance = 5f;
     public float exitDuration = 0.5f;
+    private AudioSource audioSource;
+    
  
      // Static registry so we can decide which dishes are the bottom two
      static List<DishController> allDishes = new List<DishController>();
@@ -100,7 +103,14 @@ using System.Linq;
              inputAction = null;
          }
      }
- 
+    void Awake()
+        {
+            audioSource = GetComponent<AudioSource>();
+            if (audioSource == null)
+            {
+                Debug.LogError("DishController: AudioSource component is MISSING!");
+            }
+        }
      void CreateInputAction()
      {
          if (inputAction != null) return;
@@ -151,7 +161,11 @@ using System.Linq;
  
          // Only process a single correct advance per call; guards above help avoid premature completion.
          if (sequence[currentIndex] == code)
-         {
+        {
+            if (audioSource != null && scrubSound != null)
+            {
+                audioSource.PlayOneShot(scrubSound);
+            }
              MarkIconComplete(currentIndex);
              float shakeDur = 0.18f;
              float shakeMag = 0.12f;
