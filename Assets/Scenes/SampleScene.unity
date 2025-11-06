@@ -451,7 +451,7 @@ MonoBehaviour:
   washedAlignment: 3
   autoCreateDishesUI: 1
   currentDishesText: {fileID: 0}
-  dishesFontSize: 48
+  dishesFontSize: 32
   dishesColor: {r: 1, g: 1, b: 1, a: 1}
   dishesPrefix: 'Dishes: '
   dishesAnchorMin: {x: 0.01, y: 0.88}
@@ -460,7 +460,7 @@ MonoBehaviour:
   dishesSpawnOffset: {x: 0, y: 0}
   autoCreateDifficultyUI: 1
   difficultyText: {fileID: 0}
-  difficultyFontSize: 48
+  difficultyFontSize: 32
   difficultyColor: {r: 1, g: 1, b: 1, a: 1}
   difficultyPrefix: 'Difficulty: '
   difficultySuffix: ' / 5'
