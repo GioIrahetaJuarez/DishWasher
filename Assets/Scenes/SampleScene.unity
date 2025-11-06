@@ -429,7 +429,7 @@ MonoBehaviour:
   arrowSprite: {fileID: 21300000, guid: 23a5cef1d3847a6478320b0bcc5233b7, type: 3}
   iconSpacing: 1.5
   arrivalOffset: {x: 0, y: 0, z: 0}
-  iconsOffset: {x: 0, y: 1.5, z: 0}
+  iconsOffset: {x: 0, y: 1.5, z: -1}
   iconScale: {x: 0.15, y: 0.15, z: 0.15}
   arrowsParent: {fileID: 0}
   startingArrowCount: 2
@@ -449,6 +449,25 @@ MonoBehaviour:
   washedAnchorMin: {x: 0.01, y: 1.25}
   washedAnchorMax: {x: 0.25, y: 1.3}
   washedAlignment: 3
+  autoCreateDishesUI: 1
+  currentDishesText: {fileID: 0}
+  dishesFontSize: 24
+  dishesColor: {r: 1, g: 1, b: 1, a: 1}
+  dishesPrefix: 'Dishes: '
+  dishesAnchorMin: {x: 0.01, y: 0.88}
+  dishesAnchorMax: {x: 0.25, y: 0.93}
+  dishesAlignment: 4097
+  dishesSpawnOffset: {x: 0, y: 0}
+  autoCreateDifficultyUI: 1
+  difficultyText: {fileID: 0}
+  difficultyFontSize: 24
+  difficultyColor: {r: 1, g: 1, b: 1, a: 1}
+  difficultyPrefix: 'Difficulty: '
+  difficultySuffix: ' / 5'
+  difficultyAnchorMin: {x: 0.01, y: 0.81}
+  difficultyAnchorMax: {x: 0.25, y: 0.86}
+  difficultyAlignment: 4097
+  difficultySpawnOffset: {x: 0, y: 0}
   gameOverWashedAnchorMin: {x: 0.1, y: 0.28}
   gameOverWashedAnchorMax: {x: 0.9, y: 0.36}
   brokenDishSound: {fileID: 8300000, guid: d13373636a8906d4ab864a59b4e0f742, type: 3}

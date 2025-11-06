@@ -55,6 +55,32 @@ public class gameManagerScript : MonoBehaviour
     public Vector2 washedAnchorMax = new Vector2(0.25f, 1f);
     public TextAlignmentOptions washedAlignment = TextAlignmentOptions.MidlineLeft;
 
+    //Gio new: Current Dishes Ui :)
+    [Header("Current Dishes UI")]
+    public bool autoCreateDishesUI = true;
+    public TextMeshProUGUI currentDishesText;
+    public int dishesFontSize = 48;
+    public Color dishesColor = Color.white;
+    public string dishesPrefix = "Dishes: ";
+    public Vector2 dishesAnchorMin = new Vector2(0.01f, 0.88f);
+    public Vector2 dishesAnchorMax = new Vector2(0.25f, 0.93f);
+    public TextAlignmentOptions dishesAlignment = TextAlignmentOptions.MidlineLeft;
+    public Vector2 dishesSpawnOffset = Vector2.zero;
+    
+    //Gio new: Current Dishes Ui :)
+    [Header("Difficulty UI")]
+    public bool autoCreateDifficultyUI = true;
+    public TextMeshProUGUI difficultyText;
+    public int difficultyFontSize = 48;
+    public Color difficultyColor = Color.white;
+    public string difficultyPrefix = "Difficulty: ";
+    public string difficultySuffix = " / 5";
+    public Vector2 difficultyAnchorMin = new Vector2(0.01f, 0.81f);
+    public Vector2 difficultyAnchorMax = new Vector2(0.25f, 0.86f);
+    public TextAlignmentOptions difficultyAlignment = TextAlignmentOptions.MidlineLeft;
+    public Vector2 difficultySpawnOffset = Vector2.zero;
+
+
     // New: allow tuning game-over "Dishes Washed" text position from inspector
     [Header("Game Over UI")]
     public Vector2 gameOverWashedAnchorMin = new Vector2(0.1f, 0.28f);
@@ -81,7 +107,12 @@ public class gameManagerScript : MonoBehaviour
         spawnRateTimer = spawnRateTickInterval;
         if (autoCreateWashedUI && washedCounterText == null)
             CreateWashedUI();
-        UpdateWashedUI();
+        if (autoCreateDishesUI && currentDishesText == null)
+            CreateDishesUI();
+        if (autoCreateDifficultyUI && difficultyText == null)
+            CreateDifficultyUI();
+        //Changed from UpdateWashedUI
+        UpdateAllHUD();
     }
 
     // Update is called once per frame
@@ -163,6 +194,8 @@ public class gameManagerScript : MonoBehaviour
             
             // NOTE: spawn interval progression is now timer-based (see AdjustSpawnInterval).
  
+            //Gio New: 
+            UpdateDishesUI();
             // Check loss condition: if stack size exceeds allowed limit, player loses
             if (dishStack.Count > Mathf.Max(1, maxDishesToLose))
             {
@@ -202,6 +235,7 @@ public class gameManagerScript : MonoBehaviour
         }
 
         // activate the new bottom dish if it's arrived
+        UpdateDishesUI();
         UpdateBottomDishActiveState();
     }
 
@@ -383,6 +417,56 @@ public class gameManagerScript : MonoBehaviour
         rt.anchoredPosition = washedSpawnOffset;
     }
 
+    void CreateDishesUI()
+    {
+        Canvas canvas = FindObjectOfType<Canvas>();
+        if (canvas == null)
+        {
+            Debug.LogWarning("No Canvas found for CurrentDishes UI. Create Washed UI first or add a Canvas.");
+            return;
+        }
+
+        GameObject textGO = new GameObject("CurrentDishesText");
+        textGO.transform.SetParent(canvas.transform, false);
+        currentDishesText = textGO.AddComponent<TextMeshProUGUI>();
+        if (washedTMPFont != null) currentDishesText.font = washedTMPFont;
+        currentDishesText.fontSize = dishesFontSize;
+        currentDishesText.color = dishesColor;
+        currentDishesText.alignment = dishesAlignment;
+
+        RectTransform rt = currentDishesText.rectTransform;
+        rt.anchorMin = dishesAnchorMin;
+        rt.anchorMax = dishesAnchorMax;
+        rt.offsetMin = Vector2.zero;
+        rt.offsetMax = Vector2.zero;
+        rt.anchoredPosition = dishesSpawnOffset;
+    }
+
+    void CreateDifficultyUI()
+    {
+        Canvas canvas = FindObjectOfType<Canvas>();
+        if (canvas == null)
+        {
+            Debug.LogWarning("No Canvas found for Difficulty UI. Create Washed UI first or add a Canvas.");
+            return;
+        }
+
+        GameObject textGO = new GameObject("DifficultyText");
+        textGO.transform.SetParent(canvas.transform, false);
+        difficultyText = textGO.AddComponent<TextMeshProUGUI>();
+        if (washedTMPFont != null) difficultyText.font = washedTMPFont;
+        difficultyText.fontSize = difficultyFontSize;
+        difficultyText.color = difficultyColor;
+        difficultyText.alignment = difficultyAlignment;
+
+        RectTransform rt = difficultyText.rectTransform;
+        rt.anchorMin = difficultyAnchorMin;
+        rt.anchorMax = difficultyAnchorMax;
+        rt.offsetMin = Vector2.zero;
+        rt.offsetMax = Vector2.zero;
+        rt.anchoredPosition = difficultySpawnOffset;
+    }
+
     void UpdateWashedUI()
     {
         if (washedCounterText != null)
@@ -391,6 +475,31 @@ public class gameManagerScript : MonoBehaviour
         }
     }
 
+    void UpdateDishesUI()
+    {
+        if (currentDishesText != null)
+        {
+            currentDishesText.text = dishesPrefix + dishStack.Count.ToString() + " / " + maxDishesToLose.ToString();
+        }
+    }
+
+    void UpdateDifficultyUI()
+    {
+        if (difficultyText != null)
+        {
+            // Clamp difficulty display to 5
+            int displayDifficulty = Mathf.Min(difficulty, 5);
+            difficultyText.text = difficultyPrefix + displayDifficulty.ToString() + difficultySuffix;
+        }
+    }
+
+    void UpdateAllHUD()
+    {
+        UpdateWashedUI();
+        UpdateDishesUI();
+        UpdateDifficultyUI();
+    }
+    
     // Adjust spawn interval on a timer tick. When the interval reaches the configured minimum,
     // reset it to the base value, increase starting arrow count (by 1) and bump difficulty.
     void AdjustSpawnInterval()
@@ -407,6 +516,8 @@ public class gameManagerScript : MonoBehaviour
         // increase arrow count by two each time difficulty increments
         startingArrowCount = Mathf.Max(1, startingArrowCount + 1);
         difficulty++;
+        //Gio new
+        UpdateDifficultyUI();
         Debug.Log($"Spawn rate tick reached min. Reset spawnInterval to {baseSpawnInterval}, startingArrowCount -> {startingArrowCount}, difficulty -> {difficulty}");
     }
 }
