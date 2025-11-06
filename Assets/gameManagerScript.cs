@@ -32,6 +32,17 @@ public class gameManagerScript : MonoBehaviour
     // New: max dishes allowed before losing (default 8)
     public int maxDishesToLose = 8;
 
+    // Spawn rate progression: interval will be reduced by spawnIntervalDecay each tick
+    // until it reaches minSpawnInterval (the fastest). When it reaches the fastest,
+    // the spawn interval is reset back to the original and difficulty / arrow count increase.
+    public float minSpawnInterval = 0.5f;      // fastest allowed spawn interval (max spawn rate)
+    public float spawnIntervalDecay = 0.1f;    // how much to reduce spawnInterval each tick
+    // How often (seconds) we adjust the spawn interval (speed up). This is the timer-based approach.
+    public float spawnRateTickInterval = 5f;
+    public float spawnRateTimer = 0f;
+    [HideInInspector] public int difficulty = 0;
+    private float baseSpawnInterval;           // stores the original spawnInterval to reset to
+     
     // Washed dishes tracking + UI
     [Header("Washed Counter UI")]
     public bool autoCreateWashedUI = true;
@@ -61,6 +72,10 @@ public class gameManagerScript : MonoBehaviour
     void Start()
     {
         spawnTimer = spawnInterval;
+        // remember the original spawn interval so we can reset to it later
+        baseSpawnInterval = spawnInterval;
+        // initialize spawn rate timer so adjustments start after tick interval
+        spawnRateTimer = spawnRateTickInterval;
         if (autoCreateWashedUI && washedCounterText == null)
             CreateWashedUI();
         UpdateWashedUI();
@@ -77,6 +92,14 @@ public class gameManagerScript : MonoBehaviour
             SpawnDish();
             spawnTimer = spawnInterval;
         }
+
+        // timer-driven spawn rate progression (speed up over time, independent of spawns)
+        spawnRateTimer -= Time.deltaTime;
+        if (spawnRateTimer <= 0f)
+        {
+            AdjustSpawnInterval();
+            spawnRateTimer = spawnRateTickInterval;
+        }
     }
 
     void SpawnDish()
@@ -85,8 +108,8 @@ public class gameManagerScript : MonoBehaviour
         int safeIncrementEvery = Mathf.Max(1, incrementEvery);
 
         // compute how many extra arrows to add based on how many dishes have been spawned
-        int extraArrows = dishesSpawned / safeIncrementEvery;
-        int seqLength = Mathf.Max(1, startingArrowCount + extraArrows);
+        //int extraArrows = dishesSpawned / safeIncrementEvery;
+        int seqLength = Mathf.Max(1, startingArrowCount);
 
         Vector3 spawnPos = new Vector3(spawnX, offscreenY, 0f);
         GameObject go = Instantiate(dishPrefab, spawnPos, Quaternion.identity);
@@ -134,7 +157,9 @@ public class gameManagerScript : MonoBehaviour
 
             // increment counter after spawn
             dishesSpawned++;
-
+            
+            // NOTE: spawn interval progression is now timer-based (see AdjustSpawnInterval).
+ 
             // Check loss condition: if stack size exceeds allowed limit, player loses
             if (dishStack.Count > Mathf.Max(1, maxDishesToLose))
             {
@@ -357,5 +382,24 @@ public class gameManagerScript : MonoBehaviour
         {
             washedCounterText.text = washedPrefix + washedCount.ToString();
         }
+    }
+
+    // Adjust spawn interval on a timer tick. When the interval reaches the configured minimum,
+    // reset it to the base value, increase starting arrow count (by 1) and bump difficulty.
+    void AdjustSpawnInterval()
+    {
+        if (spawnInterval > minSpawnInterval)
+        {
+            spawnInterval = Mathf.Max(minSpawnInterval, spawnInterval - spawnIntervalDecay);
+            Debug.Log($"Spawn interval decreased to {spawnInterval}");
+            return;
+        }
+
+        // reached the fastest rate — reset and increase difficulty/arrow count
+        spawnInterval = baseSpawnInterval;
+        // increase arrow count by two each time difficulty increments
+        startingArrowCount = Mathf.Max(1, startingArrowCount + 1);
+        difficulty++;
+        Debug.Log($"Spawn rate tick reached min. Reset spawnInterval to {baseSpawnInterval}, startingArrowCount -> {startingArrowCount}, difficulty -> {difficulty}");
     }
 }

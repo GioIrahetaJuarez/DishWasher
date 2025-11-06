@@ -227,3 +227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DishController
   moveSpeed: 4
+  spongePrefab: {fileID: 3591043982920281877, guid: 5991e02d539b4ba4d916729400426c11, type: 3}
+  spongeTravel: 1.2
+  spongeLocalScale: {x: 2, y: 2, z: 2}
+  spongeRotationZ: 0
